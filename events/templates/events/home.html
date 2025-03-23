@@ -5,5 +5,16 @@
 {% block content %}
 <div class="container py-5">
     <h1>EventHub Home Page</h1>
+    <div class="row">
+        {% for event in events %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'events:event_detail' event.id %}">{{ event.title }}</a></h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

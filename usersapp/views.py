@@ -20,7 +20,7 @@ def register_view(request):
             user = form.save()
             Profile.objects.create(user=user)
             login(request, user)
-            return redirect('usersapp:login')
+            return redirect('events:home')
         else:
             messages.error(request, 'Invalid form data')
     else:

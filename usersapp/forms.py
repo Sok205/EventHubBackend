@@ -10,6 +10,5 @@ class ProfileFormEdition(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Make fields optional
         for field in self.fields:
             self.fields[field].required = False
