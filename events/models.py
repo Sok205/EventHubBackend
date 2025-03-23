@@ -14,7 +14,6 @@ class Event(models.Model):
     current_participants = models.IntegerField(default=0)
     type = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
-    star_review = models.FloatField(default=0)
 
     def is_participant(self, user):
         """
