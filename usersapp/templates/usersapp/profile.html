@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Profile</h1>
+    
+    <div class="profile-container">
+        {% if profile.profile_picture %}
+            <!-- Debug info -->
+            <p>Image URL: {{ profile.profile_picture.url }}</p>
+            
+            <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}'s profile picture" class="profile-picture">
+        {% else %}
+            <div class="no-profile-picture">No profile picture available</div>
+        {% endif %}
+        
+        <div class="profile-details">
+            <h2>{{ profile.user.username }}</h2>
+            <p><strong>Bio:</strong> {{ profile.bio|default:"Not provided" }}</p>
+            <p><strong>Location:</strong> {{ profile.location|default:"Not provided" }}</p>
+            <p><strong>Website:</strong> 
+                {% if profile.website %}
+                    <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a>
+                {% else %}
+                    Not provided
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    {% if profile.user == request.user %}
+        <a href="{% url 'usersapp:profile_form_edition' profile.user.username %}" class="btn btn-primary">Edit Profile</a>
+    {% endif %}
+{% endblock %}

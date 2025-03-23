@@ -13,6 +13,7 @@
             <ul>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'usersapp:logout' %}">Logout</a></li>
+                <li><a href="{% url 'usersapp:profile' user.username %}">Profile</a></li>
                 {% else %}
                 <li><a href="{% url 'usersapp:register' %}">Register</a></li>
                 <li><a href="{% url 'usersapp:login' %}">Login</a></li>
