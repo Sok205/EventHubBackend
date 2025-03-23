@@ -101,3 +101,4 @@ def profile_form_edition_view(request, username):
     else:
         form = ProfileFormEdition(instance=profile)
     return render(request, 'usersapp/profile_form_edition.html', {'form': form})
+
