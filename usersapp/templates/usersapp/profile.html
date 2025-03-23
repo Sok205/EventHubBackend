@@ -5,7 +5,6 @@
     
     <div class="profile-container">
         {% if profile.profile_picture %}
-            <!-- Debug info -->
             <p>Image URL: {{ profile.profile_picture.url }}</p>
             
             <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}'s profile picture" class="profile-picture">
