@@ -2,60 +2,120 @@
 {% load event_tags %}
 
 {% block content %}
-    <h1>{{ event.title }}</h1>
-    <p>{{ event.description }}</p>
-    <p>{{ event.date }}</p>
-    <p>{{ event.start_time }}</p>
-    <p>{{ event.end_time }}</p>
-    <p>{{ event.location }}</p>
-    <p>Participants: {{ event.current_participants }}/{{ event.max_participants }}</p>
-    <p>{{ event.type }}</p>
-    <p>{{ event.created_at }}</p>
-    <p>Average Rating: {{ average_rating|floatformat:1 }}</p>
-    
-    {% if user.is_authenticated %}
-        {% if event|is_participant:user %}
-            <form method="post" action="{% url 'events:quit_event' event.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Quit Event</button>
-            </form>
-        {% elif event.current_participants < event.max_participants %}
-            <form method="post" action="{% url 'events:join_event' event.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Join Event</button>
-            </form>
-        {% else %}
-            <p class="text-danger">This event is full!</p>
-        {% endif %}
-    {% endif %}
-
-    {% if event.owner == user %}
-        <a href="{% url 'events:edit_event' event.id %}" class="btn btn-secondary">Edit Event</a>
-        <a href="{% url 'events:delete_event' event.id %}" class="btn btn-danger">Delete Event</a>
-    {% endif %}
-
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
+<div class="card mb-4 border-danger">
+    <div class="card-body">
+        <h1 class="card-title mb-4 text-danger">{{ event.title }}</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <p class="lead">{{ event.description }}</p>
+                <div class="mb-3">
+                    <strong class="text-danger">Date:</strong> {{ event.date }}<br>
+                    <strong class="text-danger">Time:</strong> {{ event.start_time }} - {{ event.end_time }}<br>
+                    <strong class="text-danger">Location:</strong> {{ event.location }}<br>
+                    <strong class="text-danger">Participants:</strong> {{ event.current_participants }}/{{ event.max_participants }}<br>
+                    <strong class="text-danger">Type:</strong> {{ event.type }}<br>
+                    <strong class="text-danger">Created:</strong> {{ event.created_at }}<br>
+                    <strong class="text-danger">Average Rating:</strong> {{ average_rating|floatformat:1 }}
                 </div>
+
+                <div class="mb-4">
+                    {% if user.is_authenticated %}
+                        {% if event|is_participant:user %}
+                            <form method="post" action="{% url 'events:quit_event' event.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger">Quit Event</button>
+                            </form>
+                        {% elif event.current_participants < event.max_participants %}
+                            <form method="post" action="{% url 'events:join_event' event.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Join Event</button>
+                            </form>
+                        {% else %}
+                            <div class="alert alert-danger">This event is full!</div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if event.owner == user %}
+                        <a href="{% url 'events:edit_event' event.id %}" class="btn btn-outline-danger">Edit Event</a>
+                        <a href="{% url 'events:delete_event' event.id %}" class="btn btn-danger">Delete Event</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% if event.owner == user %}
+            <div class="col-md-4">
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="card-title mb-0">Participants List</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for participant in event.participants.all %}
+                                <div class="list-group-item border-danger">
+                                    <div class="d-flex align-items-center">
+                                        {% if participant.profile.profile_picture %}
+                                            <img src="{{ participant.profile.profile_picture.url }}" 
+                                                 class="rounded-circle me-2" 
+                                                 style="width: 40px; height: 40px; object-fit: cover;"
+                                                 alt="{{ participant.username }}">
+                                        {% else %}
+                                            <div class="bg-danger text-white rounded-circle me-2 d-flex align-items-center justify-content-center" 
+                                                 style="width: 40px; height: 40px;">
+                                                <span>{{ participant.username|make_list|first|upper }}</span>
+                                            </div>
+                                        {% endif %}
+                                        <a href="{% url 'usersapp:profile' participant.username %}" 
+                                           class="text-danger text-decoration-none">
+                                            {{ participant.username }}
+                                        </a>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted mb-0">No participants yet</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if user.is_authenticated and event|is_participant:user and event.has_ended %}
+    <div class="mb-4">
+        <a href="{% url 'events:add_review' event.id %}" class="btn btn-primary">Rate the event!</a>
+    </div>
+{% endif %}
+
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">Comments</h2>
+        {% if user.is_authenticated and event|is_participant:user %}
+            <a href="{% url 'events:add_comment' event.id %}" class="btn btn-primary mb-3">Add Comment</a>
+        {% endif %}
+        <div class="list-group">
+            {% for comment in event.eventcomment_set.all %}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{ comment.user.username }}</h6>
+                        <small>{{ comment.created_at }}</small>
+                    </div>
+                    <p class="mb-1">{{ comment.comment }}</p>
+                </div>
+            {% empty %}
+                <p class="text-muted">No comments yet.</p>
             {% endfor %}
         </div>
-    {% endif %}
-    {% if user.is_authenticated and event|is_participant:user and event.has_ended %}
-        <a href="{% url 'events:add_review' event.id %}" class="btn btn-primary">Rate the event!</a>
-    {% endif %}
-    <h2>Comments</h2>
-    {% if user.is_authenticated and event|is_participant:user %}
-        <a href="{% url 'events:add_comment' event.id %}" class="btn btn-primary">Add Comment</a>
-    {% endif %}
-    <ul>
-        {% for comment in event.eventcomment_set.all %}
-            <li>
-                {{ comment.comment }} - {{ comment.created_at }} by {{ comment.user.username }}
-            </li>
-        {% endfor %}
-    </ul>
+    </div>
+</div>
 {% endblock %}
 

@@ -3,35 +3,54 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <h1>EventHub Home Page</h1>
-    <div class="row">
-        {% for event in page_obj %}
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="{% url 'events:event_detail' event.id %}">{{ event.title }}</a></h5>
-                    </div>
+<h1 class="mb-4 text-danger">Discover Events</h1>
+<div class="row g-4">
+    {% for event in page_obj %}
+        <div class="col-md-4">
+            <div class="card h-100 border-danger">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'events:event_detail' event.id %}" class="text-danger text-decoration-none">
+                            {{ event.title }}
+                        </a>
+                    </h5>
+                    <p class="card-text">{{ event.description|truncatewords:30 }}</p>
+                    <p class="card-text">
+                        <small class="text-danger">
+                            {{ event.date }} at {{ event.location }}
+                        </small>
+                    </p>
                 </div>
             </div>
-        {% endfor %}
-    </div>
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
-    
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-    
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+        </div>
+    {% endfor %}
 </div>
+
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link text-danger" href="?page=1">&laquo; First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link text-danger" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active bg-danger">
+            <span class="page-link bg-danger border-danger">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link text-danger" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link text-danger" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
 {% endblock %}

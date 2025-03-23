@@ -78,7 +78,7 @@ def profile_view(request, username):
     View a user's profile
     """
     profile = Profile.objects.get(user__username=username)
-    participating_events = EventParticipant.objects.filter(user=profile.user)
+    participating_events = EventParticipant.objects.filter(participant=profile.user)
     return render(request, 'usersapp/profile.html', {'profile': profile, 'participating_events': participating_events})
 
 
@@ -90,10 +90,8 @@ def profile_form_edition_view(request, username):
     profile = Profile.objects.get(user__username=username)
     
     if request.method == 'POST':
-        # Include request.FILES for handling uploaded files
         form = ProfileFormEdition(request.POST, request.FILES, instance=profile)
         
-        # Debug: Print information about the uploaded file
         if 'profile_picture' in request.FILES:
             print(f"File uploaded: {request.FILES['profile_picture'].name}")
         else:
@@ -101,12 +99,10 @@ def profile_form_edition_view(request, username):
             
         if form.is_valid():
             profile = form.save()
-            # Debug: Check if the profile was saved with the image
             print(f"Profile saved. Image path: {profile.profile_picture.path if profile.profile_picture else 'No image'}")
             messages.success(request, 'Profile updated successfully')
             return redirect('usersapp:profile', username=username)
         else:
-            # Debug: Print form errors
             print(f"Form errors: {form.errors}")
             messages.error(request, 'Please correct the errors below')
     else:

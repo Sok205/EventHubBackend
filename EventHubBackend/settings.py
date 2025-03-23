@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'crispy_forms',
     'crispy_bootstrap5',
+    'sorl.thumbnail',
     
     'usersapp',
     'events',

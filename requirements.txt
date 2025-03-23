@@ -5,3 +5,4 @@ django-crispy-forms<=2.3
 Pillow<=11.1.0
 faker<=37.0.2
 ipython<=9.0.2
+sorl-thumbnail<=12.11.0

@@ -1,10 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Profiles</h1>
-    <ul>
+<div class="container">
+    <h1 class="mb-4">User Profiles</h1>
+    <div class="row g-4">
         {% for profile in profiles %}
-            <li>{{ profile.user.username }}</li>
+            <div class="col-md-4">
+                <div class="card border-danger">
+                    <div class="card-body text-center">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" 
+                                 alt="{{ profile.user.username }}'s profile picture"
+                                 class="rounded-circle img-fluid mb-3" 
+                                 style="max-width: 100px;">
+                        {% else %}
+                            <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                                 style="width: 100px; height: 100px;">
+                                <span class="h2">{{ profile.user.username|make_list|first|upper }}</span>
+                            </div>
+                        {% endif %}
+                        <h5 class="card-title">{{ profile.user.username }}</h5>
+                        <a href="{% url 'usersapp:profile' profile.user.username %}" 
+                           class="btn btn-danger">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">No profiles found.</div>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
+</div>
 {% endblock %}

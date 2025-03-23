@@ -1,43 +1,68 @@
 {% extends "base.html" %}
 
+{% load thumbnail %}
+
 {% block content %}
-    <h1>Profile</h1>
-    
-    <div class="profile-container">
-        {% if profile.profile_picture %}
-            <p>Image URL: {{ profile.profile_picture.url }}</p>
-            
-            <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.username }}'s profile picture" class="profile-picture">
-        {% else %}
-            <div class="no-profile-picture">No profile picture available</div>
-        {% endif %}
-        
-        <div class="profile-details">
-            <h2>{{ profile.user.username }}</h2>
-            <p><strong>Bio:</strong> {{ profile.bio|default:"Not provided" }}</p>
-            <p><strong>Location:</strong> {{ profile.location|default:"Not provided" }}</p>
-            <p><strong>Website:</strong> 
-                {% if profile.website %}
-                    <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4 border-danger">
+            <div class="card-body text-center">
+                {% if profile.profile_picture %}
+                    {% thumbnail profile.profile_picture "150x150" crop="center" as im %}
+                    <img src="{{ im.url }}" 
+                        width="{{ im.width }}" 
+                        height="{{ im.height }}"
+                        alt="{{ profile.user.username }}'s profile picture" 
+                        class="rounded-circle mb-3">
+                    {% endthumbnail %}
                 {% else %}
-                    Not provided
+                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+                         style="width: 150px; height: 150px;">
+                        <span class="h1">{{ profile.user.username|make_list|first|upper }}</span>
+                    </div>
                 {% endif %}
-            </p>
+                
+                <h2 class="card-title">{{ profile.user.username }}</h2>
+                {% if profile.user == request.user %}
+                    <a href="{% url 'usersapp:profile_form_edition' profile.user.username %}" 
+                       class="btn btn-danger mt-3">Edit Profile</a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mb-4 border-danger">
+            <div class="card-body">
+                <h5 class="card-title">Profile Info</h5>
+                <p class="mb-2"><strong>Bio:</strong> {{ profile.bio|default:"Not provided" }}</p>
+                <p class="mb-2"><strong>Location:</strong> {{ profile.location|default:"Not provided" }}</p>
+                {% if profile.website %}
+                    <p class="mb-2"><strong>Website:</strong> 
+                        <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a>
+                    </p>
+                {% endif %}
+            </div>
         </div>
     </div>
     
-    {% if profile.user == request.user %}
-        <a href="{% url 'usersapp:profile_form_edition' profile.user.username %}" class="btn btn-primary">Edit Profile</a>
-    {% endif %}
-
-    <h2>Your Events</h2>
-    <ul>
-        {% for participant in participating_events %}
-            <li>
-                <a href="{% url 'events:event_detail' participant.event.id %}">{{ participant.event.title }}</a> on {{ participant.event.date }}
-            </li>
-        {% empty %}
-            <li>No events yet.</li>
-        {% endfor %}
-    </ul>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Events</h3>
+                <div class="list-group">
+                    {% for participant in participating_events %}
+                        <a href="{% url 'events:event_detail' participant.event.id %}" 
+                           class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ participant.event.title }}</h5>
+                                <small>{{ participant.event.date }}</small>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <p class="text-muted">No events yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
