@@ -2,10 +2,13 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.core.paginator import Paginator
+
+
 from django.contrib.auth.models import User
 from .models import Event, EventParticipant
 from .forms import EventForm
-from django.contrib import messages
 
 from datetime import datetime, date, time
 
@@ -16,7 +19,10 @@ def home(request):
     Home page for the events app
     """
     events = Event.objects.all()
-    return render(request, 'events/home.html', {'events': events})
+    paginator = Paginator(events, 21)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'events/home.html', {'page_obj': page_obj})
 
 
 """
@@ -113,6 +119,7 @@ def edit_event(request, event_id):
         form = EventForm(instance=event)
     return render(request, 'events/edit_event.html', {'form': form})
 
+@login_required
 def delete_event(request, event_id):
     """
     Delete an event
