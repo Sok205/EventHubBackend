@@ -1,0 +1,13 @@
+GET http://127.0.0.1:8000/api/events/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNzM5NTUzLCJpYXQiOjE3NDI3Mzg2NTMsImp0aSI6IjZiNWE4ZWRlNGM1ZTQzMTU4MjcyYzM0NmY3Zjk1OWUyIiwidXNlcl9pZCI6Mn0.-7HLAAkneKb5BZrn0_C_xGlNbnvlItKPDrGJJiQQZ7A
+
+###
+
+POST http://127.0.0.1:8000/users/api/auth/token/
+Content-Type: application/json
+
+{
+    "username": "sok205",
+    "password": "123"
+}
+###

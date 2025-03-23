@@ -9,3 +9,7 @@
 
 # Media files
 media/
+
+# API calls
+api.http
+apicalls

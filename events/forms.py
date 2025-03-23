@@ -7,6 +7,7 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['title', 'description', 'date', 'start_time', 'end_time', 'location', 'max_participants', 'type']
     
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         #Allows user to select date

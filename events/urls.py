@@ -22,4 +22,8 @@ urlpatterns = [
     path('<int:event_id>/add_comment/', views.add_comment, name='add_comment'),
     #Add star review
     path('<int:event_id>/add_review/', views.add_review, name='add_review'),
+
+    #API
+    path('api/events/', views.EventList.as_view(), name='event-list'),
+    path('api/events/<int:pk>/', views.EventDetail.as_view(), name='event-detail'),
 ]

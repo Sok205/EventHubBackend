@@ -43,7 +43,7 @@
             {% endfor %}
         </div>
     {% endif %}
-    {% if user.is_authenticated and event|is_participant:user %}
+    {% if user.is_authenticated and event|is_participant:user and event.has_ended %}
         <a href="{% url 'events:add_review' event.id %}" class="btn btn-primary">Rate the event!</a>
     {% endif %}
     <h2>Comments</h2>

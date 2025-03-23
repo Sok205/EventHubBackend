@@ -5,11 +5,12 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.core.paginator import Paginator
 
+from rest_framework import generics, permissions
 
 from django.contrib.auth.models import User
 from .models import Event, EventParticipant, EventComment, StarReview
 from .forms import EventForm, EventCommentForm, ReviewForm
-
+from .serializers import EventListSerializer, EventDetailSerializer
 from datetime import datetime, date, time
 
 
@@ -64,16 +65,14 @@ def join_event(request, event_id):
     - Check if event has already ended
     """
     event = get_object_or_404(Event, id=event_id)
-    
-    # Check if event has ended
+
     current_datetime = datetime.now()
     event_datetime = datetime.combine(event.date, event.end_time)
     
     if event_datetime < current_datetime:
         messages.error(request, "This event has already ended!")
         return redirect('events:event_detail', event_id)
-    
-    # Rest of your join_event logic...
+
     if event.is_participant(request.user):
         messages.error(request, "You are already registered for this event!")
         return redirect('events:event_detail', event_id)
@@ -150,7 +149,6 @@ def add_comment(request, event_id):
     return render(request, 'events/add_comment.html', {'form': form})
 
 @login_required
-@login_required
 def add_review(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     
@@ -171,3 +169,26 @@ def add_review(request, event_id):
         form = ReviewForm()
     
     return render(request, 'events/add_review.html', {'form': form, 'event': event})
+
+"""
+API VIEWS
+"""
+
+class EventList(generics.ListCreateAPIView):
+    """
+    List all events or create a new event
+    """
+    queryset = Event.objects.all()
+    serializer_class = EventListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class EventDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete an event
+    """
+    queryset = Event.objects.all()
+    serializer_class = EventDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]

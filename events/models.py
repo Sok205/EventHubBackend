@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 # Create your models here.
 
 class Event(models.Model):
@@ -37,6 +38,13 @@ class Event(models.Model):
         if reviews.exists():
             return sum(review.star_review for review in reviews) / reviews.count()
         return None
+    
+    def has_ended(self):
+        """
+        Check if an event has ended
+        """
+        event_datetime = datetime.combine(self.date, self.end_time)
+        return event_datetime < datetime.now()
         
     def __str__(self):
         return self.title
