@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event
+from .models import Event, EventComment, StarReview
 from datetime import date
 
 class EventForm(forms.ModelForm):
@@ -37,3 +37,24 @@ class EventForm(forms.ModelForm):
             if field_name not in ['date', 'start_time']:
                 self.fields[field_name].widget.attrs.update({'class': 'form-control'})
 
+class EventCommentForm(forms.ModelForm):
+    class Meta:
+        model = EventComment
+        fields = ['comment']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['comment'].widget = forms.Textarea(
+            attrs={'class': 'form-control', 'rows': 3}
+        )
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = StarReview
+        fields = ['star_review']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['star_review'].widget = forms.NumberInput(
+            attrs={'class': 'form-control', 'min': 0, 'max': 5}
+        )

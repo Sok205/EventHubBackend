@@ -11,7 +11,8 @@
     <p>Participants: {{ event.current_participants }}/{{ event.max_participants }}</p>
     <p>{{ event.type }}</p>
     <p>{{ event.created_at }}</p>
-
+    <p>Average Rating: {{ average_rating|floatformat:1 }}</p>
+    
     {% if user.is_authenticated %}
         {% if event|is_participant:user %}
             <form method="post" action="{% url 'events:quit_event' event.id %}">
@@ -42,5 +43,19 @@
             {% endfor %}
         </div>
     {% endif %}
+    {% if user.is_authenticated and event|is_participant:user %}
+        <a href="{% url 'events:add_review' event.id %}" class="btn btn-primary">Rate the event!</a>
+    {% endif %}
+    <h2>Comments</h2>
+    {% if user.is_authenticated and event|is_participant:user %}
+        <a href="{% url 'events:add_comment' event.id %}" class="btn btn-primary">Add Comment</a>
+    {% endif %}
+    <ul>
+        {% for comment in event.eventcomment_set.all %}
+            <li>
+                {{ comment.comment }} - {{ comment.created_at }} by {{ comment.user.username }}
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
 

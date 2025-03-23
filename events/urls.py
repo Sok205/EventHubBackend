@@ -18,5 +18,8 @@ urlpatterns = [
     path('<int:event_id>/join/', views.join_event, name='join_event'),
     #Quit event
     path('<int:event_id>/quit/', views.quit_event, name='quit_event'),
-
+    #Add comment
+    path('<int:event_id>/add_comment/', views.add_comment, name='add_comment'),
+    #Add star review
+    path('<int:event_id>/add_review/', views.add_review, name='add_review'),
 ]

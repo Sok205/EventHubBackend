@@ -7,8 +7,8 @@ from django.core.paginator import Paginator
 
 
 from django.contrib.auth.models import User
-from .models import Event, EventParticipant
-from .forms import EventForm
+from .models import Event, EventParticipant, EventComment, StarReview
+from .forms import EventForm, EventCommentForm, ReviewForm
 
 from datetime import datetime, date, time
 
@@ -52,7 +52,8 @@ def event_detail_view(request, event_id):
     Display details of a specific event
     """
     event = get_object_or_404(Event, id=event_id)
-    return render(request, 'events/event_detail.html', {'event': event})
+    average_rating = event.average_rating()
+    return render(request, 'events/event_detail.html', {'event': event, 'average_rating': average_rating})
 
 @login_required
 def join_event(request, event_id):
@@ -127,3 +128,46 @@ def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     event.delete()
     return redirect('events:home')
+
+@login_required
+def add_comment(request, event_id):
+    """
+    Add a comment to an event
+    """
+    event = get_object_or_404(Event, id=event_id)
+    if request.method == 'POST':
+        form = EventCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.event = event
+            comment.user = request.user
+            comment.save()
+            return redirect('events:event_detail', event_id)
+        else:
+            print(form.errors)
+    else:
+        form = EventCommentForm()
+    return render(request, 'events/add_comment.html', {'form': form})
+
+@login_required
+@login_required
+def add_review(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    
+    if StarReview.objects.filter(event=event, user=request.user).exists():
+        messages.error(request, "You have already reviewed this event.")
+        return redirect('events:event_detail', event_id=event_id)
+    
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.event = event
+            review.user = request.user
+            review.save()
+            messages.success(request, "Your review has been submitted.")
+            return redirect('events:event_detail', event_id=event_id)
+    else:
+        form = ReviewForm()
+    
+    return render(request, 'events/add_review.html', {'form': form, 'event': event})
