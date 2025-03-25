@@ -10,6 +10,12 @@
 # Media files
 media/
 
-# API calls
+# API calls and tokens
 api.http
 apicalls
+*.http
+.idea/httpRequests/
+
+# Environment variables and sensitive data
+.env
+*.env

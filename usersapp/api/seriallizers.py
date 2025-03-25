@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Profile
+from ..models import Profile
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,3 +23,5 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['id', 'user', 'bio', 'location', 'website']
         read_only_fields = ['id', 'user']
+
+

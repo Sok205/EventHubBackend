@@ -1,5 +1,9 @@
 GET http://127.0.0.1:8000/api/events/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNzM5NTUzLCJpYXQiOjE3NDI3Mzg2NTMsImp0aSI6IjZiNWE4ZWRlNGM1ZTQzMTU4MjcyYzM0NmY3Zjk1OWUyIiwidXNlcl9pZCI6Mn0.-7HLAAkneKb5BZrn0_C_xGlNbnvlItKPDrGJJiQQZ7A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTI3MzM3LCJpYXQiOjE3NDI5MjY0MzcsImp0aSI6Ijk1NGU0MWQzNWVjZDRmYjZiMDQ3NzFkODQ4ZTFjMDU1IiwidXNlcl9pZCI6Mn0.HPxLW2Cc5aK0EIFBUgaE_h-GYiOdaIQ-UFMzrUiPIb0
+
+###
+GET http://127.0.0.1:8000/api/events/1/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTI3MzM3LCJpYXQiOjE3NDI5MjY0MzcsImp0aSI6Ijk1NGU0MWQzNWVjZDRmYjZiMDQ3NzFkODQ4ZTFjMDU1IiwidXNlcl9pZCI6Mn0.HPxLW2Cc5aK0EIFBUgaE_h-GYiOdaIQ-UFMzrUiPIb0
 
 ###
 
@@ -10,4 +14,26 @@ Content-Type: application/json
     "username": "sok205",
     "password": "123"
 }
+###
+
+GET http://127.0.0.1:8000/api/events/1/comments/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTI3MzM3LCJpYXQiOjE3NDI5MjY0MzcsImp0aSI6Ijk1NGU0MWQzNWVjZDRmYjZiMDQ3NzFkODQ4ZTFjMDU1IiwidXNlcl9pZCI6Mn0.HPxLW2Cc5aK0EIFBUgaE_h-GYiOdaIQ-UFMzrUiPIb0
+
+###
+POST http://127.0.0.1:8000/api/events/1/comments/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTI3MzM3LCJpYXQiOjE3NDI5MjY0MzcsImp0aSI6Ijk1NGU0MWQzNWVjZDRmYjZiMDQ3NzFkODQ4ZTFjMDU1IiwidXNlcl9pZCI6Mn0.HPxLW2Cc5aK0EIFBUgaE_h-GYiOdaIQ-UFMzrUiPIb0
+Content-Type: application/json
+
+{
+    "comment": "witam"
+}
+
+###
+GET http://127.0.0.1:8000/api/events/1/rate/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTI5MTg3LCJpYXQiOjE3NDI5MjgyODcsImp0aSI6IjJjNzBkYWU2NDAyNTRmOGFiNGEwN2E1YzM3Y2ZhMmExIiwidXNlcl9pZCI6Mn0.ZWCV9HIfZuPmBMamngvDPj3UobAEFShDGOrNiKGb3i4
+
+###
+GET http://127.0.0.1:8000/api/events/1/ratings/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyOTMwMTExLCJpYXQiOjE3NDI5MjkyMTEsImp0aSI6Ijg0ODczMzhkZGEwNTQ4Nzg4ZmNjMDUwOGIzOGQwNmNmIiwidXNlcl9pZCI6Mn0.0HMMA7LDYIR_8OGMUy6PGSCoNs4HWfiV1Z4lu0KvnI0
+
 ###

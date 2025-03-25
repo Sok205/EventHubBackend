@@ -10,7 +10,6 @@ from rest_framework import generics, permissions
 from django.contrib.auth.models import User
 from .models import Event, EventParticipant, EventComment, StarReview
 from .forms import EventForm, EventCommentForm, ReviewForm
-from .serializers import EventListSerializer, EventDetailSerializer
 from datetime import datetime, date, time
 
 
@@ -170,25 +169,4 @@ def add_review(request, event_id):
     
     return render(request, 'events/add_review.html', {'form': form, 'event': event})
 
-"""
-API VIEWS
-"""
 
-class EventList(generics.ListCreateAPIView):
-    """
-    List all events or create a new event
-    """
-    queryset = Event.objects.all()
-    serializer_class = EventListSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-class EventDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update or delete an event
-    """
-    queryset = Event.objects.all()
-    serializer_class = EventDetailSerializer
-    permission_classes = [permissions.IsAuthenticated]

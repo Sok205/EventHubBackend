@@ -4,17 +4,11 @@ from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from rest_framework import generics, permissions
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
 from django.contrib.auth.models import User
 from .models import Profile
 from events.models import EventParticipant, Event
 from .forms import ProfileFormEdition
-from .seriallizers import ProfileSerializer, UserSerializer, UserUpdateSerializer, ProfileUpdateSerializer
+from .api.seriallizers import ProfileSerializer, UserSerializer, UserUpdateSerializer, ProfileUpdateSerializer
 
 """
 LOGIN AND REGISTER VIEWS
@@ -109,40 +103,5 @@ def profile_form_edition_view(request, username):
         form = ProfileFormEdition(instance=profile)
     return render(request, 'usersapp/profile_form_edition.html', {'form': form})
 
-"""
-API VIEWS
-"""
-class UserList(generics.ListAPIView):
-    """
-    List all users
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-class UserDetail(generics.RetrieveAPIView):
-    """
-    Get user details
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class UserProfileView(APIView):
-    """
-    Get user profile
-    """
-    permission_classes = [permissions.IsAuthenticated]
-    
-    def get(self, request):
-        user = request.user
-        serializer = ProfileSerializer(user.profile)
-        return Response(serializer.data)
-    
-    def put(self, request):
-        serializer = ProfileUpdateSerializer(request.user.profile, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
     

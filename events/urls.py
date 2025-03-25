@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from .api import apiviews
 app_name = 'events'
 
 urlpatterns = [
@@ -24,6 +24,14 @@ urlpatterns = [
     path('<int:event_id>/add_review/', views.add_review, name='add_review'),
 
     #API
-    path('api/events/', views.EventList.as_view(), name='event-list'),
-    path('api/events/<int:pk>/', views.EventDetail.as_view(), name='event-detail'),
+    path('api/events/', apiviews.EventList.as_view(), name='event-list'),
+    path('api/events/<int:pk>/', apiviews.EventDetail.as_view(), name='event-detail'),
+    path('api/events/<int:event_id>/comments/', apiviews.CommentList.as_view(), name='event-comment-list'),
+    path('api/events/<int:event_id>/rate/', apiviews.EventReviewsStats.as_view(), name='event-review-rate'),
+    path('api/events/<int:event_id>/ratings/', apiviews.EventReviewList.as_view(), name='event-ratings'),
 ]
+
+"""
+POST /api/events/{id}/rate/ - ocena wydarzenia
+GET /api/events/{id}/ratings/ - statystyki ocen wydarzenia
+"""
